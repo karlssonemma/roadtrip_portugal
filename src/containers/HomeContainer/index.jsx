@@ -3,6 +3,7 @@ import Cosmic from 'cosmicjs';
 import Mapbox from 'mapbox-gl';
 
 import PageTitle from '../../components/PageTitle';
+import DestinationInfo from '../../components/DestinationInfo';
 
 function HomeContainer() {
   let MyMap;
@@ -37,20 +38,37 @@ function HomeContainer() {
     MyMap = new Mapbox.Map({
         container: mapElement.current,
         style: 'mapbox://styles/mapbox/light-v10',
-        center: [ 10.751719406297827, 59.913819985741625 ],
-        zoom: 11.5
+        center: [ -8.446591991458519, 39.6649438481684 ],
     })
+
+    let Porto = new Mapbox.Marker()
+        .setLngLat([-8.627351460272976, 41.167260591676104])
+        .addTo(MyMap);
+
+    let Lisbon = new Mapbox.Marker()
+        .setLngLat([-9.140292667419706, 38.727805168203666])
+        .addTo(MyMap);
+
+    let Faro = new Mapbox.Marker()
+        .setLngLat([-7.923578084253709, 37.0822677353351])
+        .addTo(MyMap);
+
     setMap(MyMap);
-  }, [])
+
+  }, []);
+
 
 
   return (
     <>
       <PageTitle>Roadtrip Portugal</PageTitle>
+      <main>
       {
         (pageData !== null) && <div dangerouslySetInnerHTML={{__html: pageData.content}} />
       }
-      <div style={{height: '600px', width: '600px'}} ref={mapElement} />
+      <div style={{height: '500px'}} ref={mapElement} />
+      <DestinationInfo />
+      </main>
     </>
   )
 };
