@@ -17,6 +17,10 @@ const GlobalStyle = createGlobalStyle`
         background-color: white;
         letter-spacing: 1.5;
     }
+
+    main {
+        margin: 0 8vw;
+    }
 `;
 
 export default GlobalStyle;
