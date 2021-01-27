@@ -81,11 +81,13 @@ function HomeContainer() {
           el.style.borderRadius = '50%';
     
           el.addEventListener('click', () => {
+
             setDestinationInfo(item);
+
             map.flyTo({
-              center: `${item.metadata.coordinates}`,
+              center: item.metadata.coordinates,
               zoom: 8,
-              speed: 0.3,
+              speed: 0.7,
               curve: 1
             })
           });
