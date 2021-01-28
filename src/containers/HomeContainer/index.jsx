@@ -5,9 +5,11 @@ import styled from 'styled-components';
 
 import PageTitle from '../../components/PageTitle';
 import DestinationInfo from '../../components/DestinationInfo';
+import Weather from '../../components/Weather';
 
 let map = null;
 let marker = null;
+let nav = null;
 
 const Container = styled.div`
   display: flex;
@@ -20,7 +22,9 @@ function HomeContainer() {
   const [destinationData, setDestinationData] = useState(null);
   const [destinationInfo, setDestinationInfo] = useState(null);
   const mapElement = useRef(null);
+  const [weather, setWeather] = useState(null);
   
+
   useEffect(() => {
     const client = new Cosmic();
     const bucket = client.bucket({
@@ -64,7 +68,8 @@ function HomeContainer() {
         center: [ -8.446591991458519, 39.6649438481684 ],
         zoom: 5.5
     })
-  
+    .addControl(new Mapbox.NavigationControl(), 'top-left')
+
   }, []);
 
   useEffect(() => {
@@ -83,6 +88,7 @@ function HomeContainer() {
           el.addEventListener('click', () => {
 
             setDestinationInfo(item);
+            setVisualWeather(item);
 
             map.flyTo({
               center: item.metadata.coordinates,
@@ -111,6 +117,21 @@ function HomeContainer() {
     }
   }, [destinationData]);
 
+  
+  function setVisualWeather(item) {
+    fetch(`http://api.weatherstack.com/current?access_key=505d9d74c829dd569d0733bcc5408624&query=${item.title}`)
+    .then(response => response.json())
+    .then(data => {
+      setWeather(data)
+      console.log(data)
+    })
+    .catch(error => {
+      console.log(error)
+    });
+
+    console.log(item);
+  };
+
 
 
 
@@ -126,6 +147,7 @@ function HomeContainer() {
       <Container>
         <div style={{height: '600px', width: '40vw'}} ref={mapElement} />
         <DestinationInfo destinationInfo={destinationInfo} />
+        <Weather weather={weather} />
       </Container>
       </main>
     </>
