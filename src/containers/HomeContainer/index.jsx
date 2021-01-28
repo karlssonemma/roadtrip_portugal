@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import Cosmic from 'cosmicjs';
 import Mapbox from 'mapbox-gl';
 import styled from 'styled-components';
+// import { el } from '../../components/Marker';
 
 import PageTitle from '../../components/PageTitle';
 import DestinationInfo from '../../components/DestinationInfo';
@@ -24,7 +25,7 @@ function HomeContainer() {
   const mapElement = useRef(null);
   const [weather, setWeather] = useState(null);
   
-
+  // COSMIC
   useEffect(() => {
     const client = new Cosmic();
     const bucket = client.bucket({
@@ -60,6 +61,7 @@ function HomeContainer() {
 
   Mapbox.accessToken = process.env.MAPBOX_API_KEY;
 
+  // MAP
   useEffect(() => {
 
     map = new Mapbox.Map({
@@ -72,6 +74,7 @@ function HomeContainer() {
 
   }, []);
 
+  // MARKER
   useEffect(() => {
 
     if(destinationData !== null) {
@@ -85,7 +88,7 @@ function HomeContainer() {
           el.style.opacity = '30%';
           el.style.borderRadius = '50%';
     
-          el.addEventListener('click', () => {
+          el.addEventListener('click', (e) => {
 
             setDestinationInfo(item);
             setVisualWeather(item);
@@ -117,16 +120,20 @@ function HomeContainer() {
     }
   }, [destinationData]);
 
-  
+
   function setVisualWeather(item) {
-    fetch(`http://api.weatherstack.com/current?access_key=505d9d74c829dd569d0733bcc5408624&query=${item.title}`)
+
+    let date = Math.floor(new Date().getTime() / 1000);
+    console.log(date);
+
+    fetch(`https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${item.metadata.coordinates[0]}&lon=${item.metadata.coordinates[1]}&units=metric&dt=${date}&appid=aabfc74bd8d38f4cc57234aafe936811`)
     .then(response => response.json())
     .then(data => {
-      setWeather(data)
-      console.log(data)
+      setWeather(data);
+      console.log(data);
     })
     .catch(error => {
-      console.log(error)
+      console.log(error);
     });
 
     console.log(item);
