@@ -6,6 +6,7 @@ const Div = styled.div`
     width: 20vw;
     height: 600px;
     background-color: gray;
+    color: blue;
 `;
 
 
