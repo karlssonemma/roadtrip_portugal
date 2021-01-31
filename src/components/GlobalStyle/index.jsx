@@ -11,7 +11,7 @@ const GlobalStyle = createGlobalStyle`
     }
 
     body {
-        font-family: sans-serif;
+        font-family: 'Quattrocento', serif;
         font-size: 16px;
         color: black;
         background-color: white;

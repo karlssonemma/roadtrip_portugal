@@ -13,8 +13,9 @@ let marker = null;
 let nav = null;
 
 const Container = styled.div`
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 600px;
 `;
 
 function HomeContainer() {
@@ -108,12 +109,12 @@ function HomeContainer() {
             e.target.style.backgroundColor = 'black'
           })
 
-          let popup = new Mapbox.Popup()
-          popup.setHTML(`${item.metadata.popup_text}`);
+          // let popup = new Mapbox.Popup()
+          // popup.setHTML(`${item.metadata.popup_text}`);
 
           let marker = new Mapbox.Marker(el)
           .setLngLat(item.metadata.coordinates)
-          .setPopup(popup)
+          // .setPopup(popup)
           marker.addTo(map)
 
         })
@@ -125,6 +126,7 @@ function HomeContainer() {
 
     let date = Math.floor(new Date().getTime() / 1000);
     console.log(date);
+    
 
     fetch(`https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${item.metadata.coordinates[0]}&lon=${item.metadata.coordinates[1]}&units=metric&dt=${date}&appid=aabfc74bd8d38f4cc57234aafe936811`)
     .then(response => response.json())
@@ -146,13 +148,13 @@ function HomeContainer() {
 
   return (
     <>
-      <PageTitle>Roadtrip Portugal</PageTitle>
+      <PageTitle>ROADTRIP PORTUGAL</PageTitle>
       <main>
       {
         (pageData !== null) && <div dangerouslySetInnerHTML={{__html: pageData.content}} />
       }
       <Container>
-        <div style={{height: '600px', width: '40vw'}} ref={mapElement} />
+        <div style={{height: '600px'}} ref={mapElement} />
         <DestinationInfo destinationInfo={destinationInfo} />
         <Weather weather={weather} />
       </Container>
