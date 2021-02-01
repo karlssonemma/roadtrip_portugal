@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import PageTitle from '../../components/PageTitle';
 import DestinationInfo from '../../components/DestinationInfo';
 import Weather from '../../components/Weather';
+import Button from '../../Button';
 
 let map = null;
 let marker = null;
@@ -18,6 +19,22 @@ const Container = styled.div`
   grid-template-rows: 600px;
 `;
 
+const Overlay = styled.div`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgba(0,0,0, 0.8);
+  z-index: 10;
+
+  & > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
 function HomeContainer() {
 
   const [pageData, setPageData] = useState(null);
@@ -25,6 +42,7 @@ function HomeContainer() {
   const [destinationInfo, setDestinationInfo] = useState(null);
   const mapElement = useRef(null);
   const [weather, setWeather] = useState(null);
+  const [weatherOpen, setWeatherOpen] = useState(false);
   
   // COSMIC
   useEffect(() => {
@@ -141,8 +159,20 @@ function HomeContainer() {
     console.log(item);
   };
 
+  function showWeather() {
+    return(
+      <Overlay>
+        <Button function={toggleWeather} text={'X'} />
+        <div>
+          <Weather weather={weather} />
+        </div>
+      </Overlay>
+    )
+  };
 
-
+  function toggleWeather() {
+      setWeatherOpen(!weatherOpen);
+  };
 
 
 
@@ -156,7 +186,13 @@ function HomeContainer() {
       <Container>
         <div style={{height: '600px'}} ref={mapElement} />
         <DestinationInfo destinationInfo={destinationInfo} />
-        <Weather weather={weather} />
+        {/* <Weather weather={weather} /> */}
+        {
+          weather && <Button function={toggleWeather} text={'Show forecast'} />
+        }
+        {
+          weatherOpen && showWeather()
+        }
       </Container>
       </main>
     </>

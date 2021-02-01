@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import Plot from 'react-plotly.js';
 
 const Div = styled.div`
-    color: blue;
+    width: 80vw;
+    height: 90vh;
 `;
 
 
@@ -36,10 +37,6 @@ function Weather(props) {
             font: { family: 'Jost, sans-serif' },
             margin: {
                 autoexpand: true,
-                l: 40,
-                r: 40,
-                t: 40,
-                b: 40,
             },
             xaxis: {
                 showgrid: false,
