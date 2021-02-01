@@ -7,33 +7,14 @@ import styled from 'styled-components';
 import PageTitle from '../../components/PageTitle';
 import DestinationInfo from '../../components/DestinationInfo';
 import Weather from '../../components/Weather';
-import Button from '../../Button';
-
+import Button from '../../components/Button';
+import { Overlay } from '../../components/Overlay';
+import { GridContainer } from '../../components/GridContainer'
+ 
 let map = null;
 let marker = null;
 let nav = null;
 
-const Container = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 600px;
-`;
-
-const Overlay = styled.div`
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  right: 0;
-  background-color: rgba(0,0,0, 0.8);
-  z-index: 10;
-
-  & > div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-`;
 
 function HomeContainer() {
 
@@ -43,6 +24,7 @@ function HomeContainer() {
   const mapElement = useRef(null);
   const [weather, setWeather] = useState(null);
   const [weatherOpen, setWeatherOpen] = useState(false);
+  const [cities, setCities] = useState([]);
   
   // COSMIC
   useEffect(() => {
@@ -106,19 +88,6 @@ function HomeContainer() {
           el.style.backgroundColor = 'black';
           el.style.opacity = '30%';
           el.style.borderRadius = '50%';
-    
-          el.addEventListener('click', (e) => {
-
-            setDestinationInfo(item);
-            setVisualWeather(item);
-
-            map.flyTo({
-              center: item.metadata.coordinates,
-              zoom: 8,
-              speed: 0.7,
-              curve: 1
-            })
-          });
 
           el.addEventListener('mouseover', (e) => {
             e.target.style.backgroundColor = 'green'
@@ -126,19 +95,49 @@ function HomeContainer() {
           el.addEventListener('mouseout', (e) => {
             e.target.style.backgroundColor = 'black'
           })
+    
+          el.addEventListener('click', (e) => {
 
-          // let popup = new Mapbox.Popup()
-          // popup.setHTML(`${item.metadata.popup_text}`);
+            e.target.style.opacity = 0;
+            setDestinationInfo(item);
+            setVisualWeather(item);
+            createAttractions(item);
+
+            map.flyTo({
+              center: item.metadata.coordinates,
+              zoom: 10,
+              speed: 0.7,
+              curve: 1
+            })
+
+          });
+
 
           let marker = new Mapbox.Marker(el)
           .setLngLat(item.metadata.coordinates)
-          // .setPopup(popup)
           marker.addTo(map)
 
         })
     }
   }, [destinationData]);
 
+
+  function createAttractions(item) {
+
+    let newCityArray = Object.entries(item.metadata.attractions);
+
+      newCityArray.forEach(([key, value]) => {
+
+        let popup = new Mapbox.Popup()
+        popup.setHTML(`${value.popup_text}`);
+
+        let citymarker = new Mapbox.Marker()
+        .setLngLat(value.coordinates)
+        .setPopup(popup)
+        citymarker.addTo(map);
+
+      });
+  };
 
   function setVisualWeather(item) {
 
@@ -183,17 +182,16 @@ function HomeContainer() {
       {
         (pageData !== null) && <div dangerouslySetInnerHTML={{__html: pageData.content}} />
       }
-      <Container>
+      <GridContainer>
         <div style={{height: '600px'}} ref={mapElement} />
         <DestinationInfo destinationInfo={destinationInfo} />
-        {/* <Weather weather={weather} /> */}
         {
           weather && <Button function={toggleWeather} text={'Show forecast'} />
         }
         {
           weatherOpen && showWeather()
         }
-      </Container>
+      </GridContainer>
       </main>
     </>
   )

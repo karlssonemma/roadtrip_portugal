@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Plot from 'react-plotly.js';
 
 const Div = styled.div`
+    max-width: 600px;
     width: 80vw;
     height: 90vh;
 `;

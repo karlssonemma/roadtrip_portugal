@@ -6,7 +6,8 @@ import SecondaryTitle from '../SecondaryTitle';
 
 const Section = styled.section`
     padding: 1em;
-    background-color: lightgray;
+    background-color: gray;
+    overflow: scroll;
 `;
 
 function DestinationInfo(props) {

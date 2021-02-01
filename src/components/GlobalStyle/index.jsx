@@ -11,15 +11,16 @@ const GlobalStyle = createGlobalStyle`
     }
 
     body {
-        font-family: 'Quattrocento', serif;
-        font-size: 16px;
+        font-family: 'Bodoni Moda', serif;
+        font-size: 14px;
         color: black;
         background-color: white;
         letter-spacing: 1.5;
+        font-weight: 400;
     }
 
     main {
-        margin: 0 8vw;
+        margin: 0 5%;
     }
 `;
 
