@@ -10,20 +10,20 @@ const Section = styled.section`
     overflow: scroll;
 `;
 
-function DestinationInfo(props) {
+function DestinationInfoBox(props) {
 
   return (
     <>
       <Section>
         {
-          props.destinationInfo && <SecondaryTitle key={props.destinationInfo.slug} dangerouslySetInnerHTML={{__html: props.destinationInfo.metadata.subhead}} />
+          props.destinationInfo && <SecondaryTitle key={Math.floor(Math.random() * 1000)} dangerouslySetInnerHTML={{__html: props.destinationInfo.metadata.subhead}} />
         }
         {
-          props.destinationInfo && <div key={props.destinationInfo.slug} dangerouslySetInnerHTML={{__html: props.destinationInfo.content}} />
+          props.destinationInfo && <div key={Math.floor(Math.random() * 1000)} dangerouslySetInnerHTML={{__html: props.destinationInfo.content}} />
         }
       </Section>
     </>
   )
 };
 
-export default DestinationInfo;
+export default DestinationInfoBox;

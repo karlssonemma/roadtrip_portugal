@@ -5,14 +5,14 @@ import styled from 'styled-components';
 // import { el } from '../../components/Marker';
 
 import PageTitle from '../../components/PageTitle';
-import DestinationInfo from '../../components/DestinationInfo';
+import DestinationInfoBox from '../../components/DestinationInfoBox';
 import Weather from '../../components/Weather';
 import Button from '../../components/Button';
+import ForecastBtn from '../../components/ForecastBtn';
 import { Overlay } from '../../components/Overlay';
 import { GridContainer } from '../../components/GridContainer'
  
 let map = null;
-let marker = null;
 let nav = null;
 
 
@@ -24,7 +24,6 @@ function HomeContainer() {
   const mapElement = useRef(null);
   const [weather, setWeather] = useState(null);
   const [weatherOpen, setWeatherOpen] = useState(false);
-  const [cities, setCities] = useState([]);
   
   // COSMIC
   useEffect(() => {
@@ -80,26 +79,46 @@ function HomeContainer() {
 
     if(destinationData !== null) {
 
-      destinationData.map(item => {
-          let el = document.createElement('div');
-          el.style.display = 'block';
-          el.style.height = '30px';
-          el.style.width = '30px';
-          el.style.backgroundColor = 'black';
-          el.style.opacity = '30%';
-          el.style.borderRadius = '50%';
+      destinationData.map((item, index) => {
+          // let el = document.createElement('div');
+          // el.style.display = 'block';
+          // el.style.height = '30px';
+          // el.style.width = '30px';
+          // el.style.backgroundColor = 'black';
+          // el.style.opacity = '30%';
+          // el.style.borderRadius = '50%';
+          // el.id = index;
+          // el.style.backgroundColor = 'green';
 
-          el.addEventListener('mouseover', (e) => {
-            e.target.style.backgroundColor = 'green'
-          })
-          el.addEventListener('mouseout', (e) => {
-            e.target.style.backgroundColor = 'black'
-          })
+          // el.addEventListener('mouseover', (e) => {
+          //   e.target.style.backgroundColor = 'green'
+          // })
+          // el.addEventListener('mouseout', (e) => {
+          //   e.target.style.backgroundColor = 'black'
+          // })
     
-          el.addEventListener('click', (e) => {
+          // el.addEventListener('click', (e) => {
+          //   e.target.style.opacity = 0;
+          //   setDestinationInfo(item);  
+          //   setVisualWeather(item);
+          //   createAttractions(item);
 
-            e.target.style.opacity = 0;
-            setDestinationInfo(item);
+          //   map.flyTo({
+          //     center: item.metadata.coordinates,
+          //     zoom: 10,
+          //     speed: 0.7,
+          //     curve: 1
+          //   })
+
+          // });
+
+          
+
+          let marker = new Mapbox.Marker({ color: 'darkgreen' })
+          .setLngLat(item.metadata.coordinates)
+          marker.addTo(map)
+          marker.getElement().addEventListener('click', () => {
+            setDestinationInfo(item);  
             setVisualWeather(item);
             createAttractions(item);
 
@@ -108,16 +127,9 @@ function HomeContainer() {
               zoom: 10,
               speed: 0.7,
               curve: 1
-            })
-
+            });
           });
-
-
-          let marker = new Mapbox.Marker(el)
-          .setLngLat(item.metadata.coordinates)
-          marker.addTo(map)
-
-        })
+        });
     }
   }, [destinationData]);
 
@@ -128,14 +140,22 @@ function HomeContainer() {
 
       newCityArray.forEach(([key, value]) => {
 
-        let popup = new Mapbox.Popup()
-        popup.setHTML(`${value.popup_text}`);
+        let popupDiv = document.createElement('div');
+        popupDiv.style.width = 'max-content';
+        popupDiv.style.height = '20px';
+        popupDiv.style.borderRadius = '5px';
+        popupDiv.style.fontFamily = 'Jost, sans-serif';
+        popupDiv.innerHTML = `${value.popup_text}`;
+        
+
+        let popup = new Mapbox.Popup({ closeButton: false })
+          .setDOMContent(popupDiv);
+        // popup.setHTML(`${value.popup_text}`);
 
         let citymarker = new Mapbox.Marker()
-        .setLngLat(value.coordinates)
-        .setPopup(popup)
-        citymarker.addTo(map);
-
+          .setLngLat(value.coordinates)
+          .setPopup(popup)
+          citymarker.addTo(map);
       });
   };
 
@@ -184,10 +204,9 @@ function HomeContainer() {
       }
       <GridContainer>
         <div style={{height: '600px'}} ref={mapElement} />
-        <DestinationInfo destinationInfo={destinationInfo} />
-        {
-          weather && <Button function={toggleWeather} text={'Show forecast'} />
-        }
+        <DestinationInfoBox destinationInfo={destinationInfo} />
+        
+        <ForecastBtn function={toggleWeather} text={'Show forecast'} weather={weather} />
         {
           weatherOpen && showWeather()
         }
