@@ -14,6 +14,7 @@ import { GridContainer } from '../../components/GridContainer'
  
 let map = null;
 let nav = null;
+// let markerArray = [];
 
 
 function HomeContainer() {
@@ -24,6 +25,7 @@ function HomeContainer() {
   const mapElement = useRef(null);
   const [weather, setWeather] = useState(null);
   const [weatherOpen, setWeatherOpen] = useState(false);
+  // const [allMarkers, setAllMarkers] = useState(null);
   
   // COSMIC
   useEffect(() => {
@@ -64,6 +66,8 @@ function HomeContainer() {
   // MAP
   useEffect(() => {
 
+    let zoomed = false;
+
     map = new Mapbox.Map({
         container: mapElement.current,
         style: 'mapbox://styles/mapbox/light-v10',
@@ -71,6 +75,20 @@ function HomeContainer() {
         zoom: 5.5
     })
     .addControl(new Mapbox.NavigationControl(), 'top-left')
+    
+    .on('zoomend', () => {
+
+      let zoomLevel = map.getZoom();
+
+        if (zoomLevel < 7) {
+          let allMarkers = document.querySelectorAll('.mapboxgl-marker');
+          for (const marker of allMarkers) {
+              if(marker.classList.contains('city-markers')) {
+                marker.remove();
+              };
+          };
+        };
+    })
 
   }, []);
 
@@ -150,12 +168,12 @@ function HomeContainer() {
 
         let popup = new Mapbox.Popup({ closeButton: false })
           .setDOMContent(popupDiv);
-        // popup.setHTML(`${value.popup_text}`);
 
         let citymarker = new Mapbox.Marker()
           .setLngLat(value.coordinates)
           .setPopup(popup)
           citymarker.addTo(map);
+          citymarker.getElement().classList.add('city-markers')
       });
   };
 
