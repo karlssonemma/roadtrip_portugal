@@ -18,7 +18,8 @@ const Text = styled.span`
   text-transform: uppercase;
   font-size: 1.5rem;
   padding: .5em;
-
+  display: block;
+  
     @media screen and (min-width: 900px) {
         writing-mode: vertical-rl;
         text-orientation: mixed;

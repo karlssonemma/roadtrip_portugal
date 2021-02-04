@@ -76,61 +76,75 @@ function HomeContainer() {
     })
     .addControl(new Mapbox.NavigationControl(), 'top-left')
     
-    .on('zoomend', () => {
+    // .on('zoom', showAttractions);
+    // showAttractions();
+    // .on('zoomend', () => {
 
-      let zoomLevel = map.getZoom();
+    //   let zoomLevel = map.getZoom();
 
-        if (zoomLevel < 7) {
-          let allMarkers = document.querySelectorAll('.mapboxgl-marker');
-          for (const marker of allMarkers) {
-              if(marker.classList.contains('city-markers')) {
-                marker.remove();
-              };
-          };
-        };
-    })
+    //     if (zoomLevel < 7) {
+    //       let allMarkers = document.querySelectorAll('.mapboxgl-marker');
+    //       for (const marker of allMarkers) {
+    //           if(marker.classList.contains('city-markers')) {
+    //             marker.remove();
+    //           };
+    //       };
+    //     };
+    // })
 
   }, []);
+
+  function showAttractions() {
+
+    let zoomLevel = map.getZoom();
+    
+    if (zoomLevel > 7) {
+
+      if (destinationData !== null) {
+
+        destinationData.map(item => {
+
+          let newCityArray = Object.entries(item.metadata.attractions);
+
+            newCityArray.forEach(([key, value]) => {
+
+              let popupDiv = document.createElement('div');
+              popupDiv.style.width = 'max-content';
+              popupDiv.style.height = '20px';
+              popupDiv.style.borderRadius = '5px';
+              popupDiv.style.fontFamily = 'Jost, sans-serif';
+              popupDiv.innerHTML = `${value.text}`;
+              
+
+              let popup = new Mapbox.Popup({ closeButton: false })
+                .setDOMContent(popupDiv);
+
+              let citymarker = new Mapbox.Marker()
+                .setLngLat(value.coordinates)
+                .setPopup(popup)
+                citymarker.addTo(map);
+                citymarker.getElement().classList.add('city-markers')
+            });
+        });
+      };
+    } else {
+      console.log('else')
+      let allMarkers = document.querySelectorAll('.mapboxgl-marker');
+        for (const marker of allMarkers) {
+            if(marker.classList.contains('city-markers')) {
+              marker.remove();
+            };
+        };
+    };
+  };
 
   // MARKER
   useEffect(() => {
 
     if(destinationData !== null) {
+      console.log(destinationData)
 
-      destinationData.map((item, index) => {
-          // let el = document.createElement('div');
-          // el.style.display = 'block';
-          // el.style.height = '30px';
-          // el.style.width = '30px';
-          // el.style.backgroundColor = 'black';
-          // el.style.opacity = '30%';
-          // el.style.borderRadius = '50%';
-          // el.id = index;
-          // el.style.backgroundColor = 'green';
-
-          // el.addEventListener('mouseover', (e) => {
-          //   e.target.style.backgroundColor = 'green'
-          // })
-          // el.addEventListener('mouseout', (e) => {
-          //   e.target.style.backgroundColor = 'black'
-          // })
-    
-          // el.addEventListener('click', (e) => {
-          //   e.target.style.opacity = 0;
-          //   setDestinationInfo(item);  
-          //   setVisualWeather(item);
-          //   createAttractions(item);
-
-          //   map.flyTo({
-          //     center: item.metadata.coordinates,
-          //     zoom: 10,
-          //     speed: 0.7,
-          //     curve: 1
-          //   })
-
-          // });
-
-          
+      destinationData.map((item, index) => {        
 
           let marker = new Mapbox.Marker({ color: 'darkgreen' })
           .setLngLat(item.metadata.coordinates)
@@ -163,7 +177,7 @@ function HomeContainer() {
         popupDiv.style.height = '20px';
         popupDiv.style.borderRadius = '5px';
         popupDiv.style.fontFamily = 'Jost, sans-serif';
-        popupDiv.innerHTML = `${value.popup_text}`;
+        popupDiv.innerHTML = `${value.text}`;
         
 
         let popup = new Mapbox.Popup({ closeButton: false })
@@ -215,7 +229,9 @@ function HomeContainer() {
 
   return (
     <>
-      <PageTitle>ROADTRIP PORTUGAL</PageTitle>
+      <nav>
+        <PageTitle>ROADTRIP PORTUGAL</PageTitle>
+      </nav>
       <main>
       {
         (pageData !== null) && <div dangerouslySetInnerHTML={{__html: pageData.content}} />

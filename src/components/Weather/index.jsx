@@ -93,13 +93,6 @@ function Weather(props) {
     return(
         <Div>
             {
-                props.weather && 
-                <div>
-                    <p>{props.weather.current.temp}</p>
-                    <img src={props.weather.current.weather.icon} />
-                </div>
-            }
-            {
                 props.weather && <Plot
                 style={{width: 'auto', height: '300px'}}
                 data={graph.data}
