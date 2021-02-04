@@ -38,3 +38,22 @@ Porto
 
 .Cervejaria Brasão Aliados
 -8.611865666543029, 41.149426650757476
+
+
+-- Peniche
+-9.386050310289907, 39.36908892825682
+
+-- Lagos
+-8.675044442139956, 37.11733087966785
+
+-- Kap Sankt Vincent
+-8.990314093982374, 37.04324689657157
+
+-- Parque Natural do Sudoeste Alentejano e Costa Vicentina
+-8.660081990534174, 37.514181321375865
+
+-- Parque Natural da Arrábida
+-9.018711128237177, 38.452523446985076
+
+-- Parque Natural das Serras de Aire e Candeeiros
+-8.771560909571715, 39.47956082930004

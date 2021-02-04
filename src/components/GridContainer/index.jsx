@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export const GridContainer = styled.div`
-width: 100%;
+export const GridContainer = styled.main`
+margin: 0 5%;
 display: grid;
 grid-template-columns: 90%;
 justify-content: center;

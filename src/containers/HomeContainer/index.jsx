@@ -11,6 +11,8 @@ import Button from '../../components/Button';
 import ForecastBtn from '../../components/ForecastBtn';
 import { Overlay } from '../../components/Overlay';
 import { GridContainer } from '../../components/GridContainer'
+import WelcomeScreen from '../../components/WelcomeScreen';
+
  
 let map = null;
 let nav = null;
@@ -210,7 +212,7 @@ function HomeContainer() {
     console.log(item);
   };
 
-  function showWeather() {
+  function renderWeather() {
     return(
       <Overlay>
         <Button function={toggleWeather} text={'X'} />
@@ -229,23 +231,19 @@ function HomeContainer() {
 
   return (
     <>
+      <WelcomeScreen />
       <nav>
         <PageTitle>ROADTRIP PORTUGAL</PageTitle>
       </nav>
-      <main>
-      {
-        (pageData !== null) && <div dangerouslySetInnerHTML={{__html: pageData.content}} />
-      }
       <GridContainer>
         <div style={{height: '600px'}} ref={mapElement} />
         <DestinationInfoBox destinationInfo={destinationInfo} />
         
         <ForecastBtn function={toggleWeather} text={'Show forecast'} weather={weather} />
         {
-          weatherOpen && showWeather()
+          weatherOpen && renderWeather()
         }
       </GridContainer>
-      </main>
     </>
   )
 };

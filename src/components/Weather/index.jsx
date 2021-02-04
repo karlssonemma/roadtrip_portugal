@@ -71,14 +71,11 @@ function Weather(props) {
             };
 
             props.weather.hourly.map(item => {
-                let time = item.dt * 1000;
-                let newTime = new Date(time);
-                let newTime2 = newTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                console.log(newTime2)
+                let time = new Date(item.dt * 1000);
+                let newTime = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-                newGraphData.x.push(newTime2);
+                newGraphData.x.push(newTime);
                 newGraphData.y.push(item.temp);
-
             });
 
             let newChartState = {

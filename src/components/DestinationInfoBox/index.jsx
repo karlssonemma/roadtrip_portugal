@@ -4,6 +4,7 @@ import Mapbox from 'mapbox-gl';
 import styled from 'styled-components';
 import SecondaryTitle from '../SecondaryTitle';
 import TapIcon from './img/tap.png';
+import Arrow from './img/right-arrow.png';
 
 const Section = styled.section`
     padding: 1em;
@@ -15,6 +16,12 @@ const Icon = styled.img`
   width: 30px;
   margin-right: .5em;
   /* transform: translateY(3px); */
+`;
+
+const ArrowIcon = styled.img`
+  width: 20px;
+  transform: translateY(4px);
+  margin-right: .5em;
 `;
 
 const PreDiv = styled.div`
@@ -46,21 +53,28 @@ function DestinationInfoBox(props) {
     return(
       <>
         <SecondaryTitle key={Math.floor(Math.random() * 1000)} dangerouslySetInnerHTML={{__html: props.destinationInfo.title}} />
-        <div key={Math.floor(Math.random() * 1000)} dangerouslySetInnerHTML={{__html: props.destinationInfo.content}} />
-        <div>
+        <section key={Math.floor(Math.random() * 1000)} dangerouslySetInnerHTML={{__html: props.destinationInfo.content}} />
+        <section>
           {
-            attractionArray && attractionArray.map(item => <p><AttractionTitle>{item.title}</AttractionTitle>{item.text}</p>)
+            attractionArray && attractionArray.map(item => 
+              <section>
+                <AttractionTitle>
+                  <ArrowIcon src={Arrow} alt='' />{item.title}
+                </AttractionTitle>{item.text}
+              </section>
+            )
           }
-        </div>
+        </section>
       </>
     )
   };
 
   return (
     <>
+
       <Section>
         {
-          props.destinationInfo ? renderInfo() : <PreDiv><Icon src={TapIcon} /> to travel!</PreDiv>
+          props.destinationInfo ? renderInfo() : <PreDiv><Icon src={TapIcon} alt='' /> to travel!</PreDiv>
         }
       </Section>
     </>
