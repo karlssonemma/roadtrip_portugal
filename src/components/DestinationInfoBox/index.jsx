@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Cosmic from 'cosmicjs';
-import Mapbox from 'mapbox-gl';
 import styled from 'styled-components';
 import SecondaryTitle from '../SecondaryTitle';
 import TapIcon from './img/tap.png';
@@ -32,7 +31,12 @@ const PreDiv = styled.div`
   align-items: center;
 `;
 
-const AttractionTitle = styled.h3`
+const AttractionsHead = styled.h3`
+  margin: .2em 0;
+  text-decoration: underline;
+`;
+
+const AttractionName = styled.h4`
   font-weight: 600;
   margin: 0;
 `;
@@ -56,11 +60,14 @@ function DestinationInfoBox(props) {
         <section key={Math.floor(Math.random() * 1000)} dangerouslySetInnerHTML={{__html: props.destinationInfo.content}} />
         <section>
           {
+            props.destinationInfo && <AttractionsHead>{props.destinationInfo.metadata.attractions_header}</AttractionsHead>
+          }
+          {
             attractionArray && attractionArray.map(item => 
               <section>
-                <AttractionTitle>
+                <AttractionName>
                   <ArrowIcon src={Arrow} alt='' />{item.title}
-                </AttractionTitle>{item.text}
+                </AttractionName>{item.text}
               </section>
             )
           }
@@ -71,7 +78,6 @@ function DestinationInfoBox(props) {
 
   return (
     <>
-
       <Section>
         {
           props.destinationInfo ? renderInfo() : <PreDiv><Icon src={TapIcon} alt='' /> to travel!</PreDiv>

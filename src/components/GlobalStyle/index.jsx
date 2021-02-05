@@ -11,6 +11,7 @@ const GlobalStyle = createGlobalStyle`
     }
 
     body {
+        height: 100vh;
         font-family: 'Bodoni Moda', serif;
         font-size: 14px;
         color: black;

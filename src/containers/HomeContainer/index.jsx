@@ -16,6 +16,7 @@ import WelcomeScreen from '../../components/WelcomeScreen';
  
 let map = null;
 let nav = null;
+let newArray = [];
 // let markerArray = [];
 
 
@@ -28,6 +29,7 @@ function HomeContainer() {
   const [weather, setWeather] = useState(null);
   const [weatherOpen, setWeatherOpen] = useState(false);
   // const [allMarkers, setAllMarkers] = useState(null);
+  const [attractions, setAttractions] = useState(null);
   
   // COSMIC
   useEffect(() => {
@@ -68,8 +70,6 @@ function HomeContainer() {
   // MAP
   useEffect(() => {
 
-    let zoomed = false;
-
     map = new Mapbox.Map({
         container: mapElement.current,
         style: 'mapbox://styles/mapbox/light-v10',
@@ -78,119 +78,85 @@ function HomeContainer() {
     })
     .addControl(new Mapbox.NavigationControl(), 'top-left')
     
-    // .on('zoom', showAttractions);
-    // showAttractions();
-    // .on('zoomend', () => {
-
-    //   let zoomLevel = map.getZoom();
-
-    //     if (zoomLevel < 7) {
-    //       let allMarkers = document.querySelectorAll('.mapboxgl-marker');
-    //       for (const marker of allMarkers) {
-    //           if(marker.classList.contains('city-markers')) {
-    //             marker.remove();
-    //           };
-    //       };
-    //     };
-    // })
+    .on('zoom', showHideAttractions);
 
   }, []);
 
-  function showAttractions() {
-
-    let zoomLevel = map.getZoom();
-    
-    if (zoomLevel > 7) {
-
-      if (destinationData !== null) {
-
-        destinationData.map(item => {
-
-          let newCityArray = Object.entries(item.metadata.attractions);
-
-            newCityArray.forEach(([key, value]) => {
-
-              let popupDiv = document.createElement('div');
-              popupDiv.style.width = 'max-content';
-              popupDiv.style.height = '20px';
-              popupDiv.style.borderRadius = '5px';
-              popupDiv.style.fontFamily = 'Jost, sans-serif';
-              popupDiv.innerHTML = `${value.text}`;
-              
-
-              let popup = new Mapbox.Popup({ closeButton: false })
-                .setDOMContent(popupDiv);
-
-              let citymarker = new Mapbox.Marker()
-                .setLngLat(value.coordinates)
-                .setPopup(popup)
-                citymarker.addTo(map);
-                citymarker.getElement().classList.add('city-markers')
-            });
-        });
-      };
-    } else {
-      console.log('else')
-      let allMarkers = document.querySelectorAll('.mapboxgl-marker');
-        for (const marker of allMarkers) {
-            if(marker.classList.contains('city-markers')) {
-              marker.remove();
-            };
-        };
-    };
-  };
-
-  // MARKER
+  // BIG MARKERS
   useEffect(() => {
 
     if(destinationData !== null) {
       console.log(destinationData)
 
-      destinationData.map((item, index) => {        
+      destinationData.map(item => {       
 
-          let marker = new Mapbox.Marker({ color: 'darkgreen' })
-          .setLngLat(item.metadata.coordinates)
+          let marker = new Mapbox.Marker({ color: 'black' })
+          .setLngLat([item.metadata.longitude, item.metadata.latitude])
           marker.addTo(map)
           marker.getElement().addEventListener('click', () => {
             setDestinationInfo(item);  
             setVisualWeather(item);
-            createAttractions(item);
 
             map.flyTo({
-              center: item.metadata.coordinates,
-              zoom: 10,
+              center: [item.metadata.longitude, item.metadata.latitude],
+              zoom: 12.5,
               speed: 0.7,
               curve: 1
             });
           });
+
+          if (item.metadata.attractions !== null) {
+            
+            let attractionsArray = Object.entries(item.metadata.attractions);
+
+              attractionsArray.forEach(([key, value]) => {
+                if (value.title !== "")
+                  newArray.push(value);             
+              });
+
+          };
         });
+      setAttractions(newArray);
     }
   }, [destinationData]);
 
-
-  function createAttractions(item) {
-
-    let newCityArray = Object.entries(item.metadata.attractions);
-
-      newCityArray.forEach(([key, value]) => {
-
+  // SMALL MARKERS
+  useEffect(() => {
+    if (attractions !== null) {
+      attractions.map(item => {
         let popupDiv = document.createElement('div');
         popupDiv.style.width = 'max-content';
         popupDiv.style.height = '20px';
         popupDiv.style.borderRadius = '5px';
         popupDiv.style.fontFamily = 'Jost, sans-serif';
-        popupDiv.innerHTML = `${value.text}`;
+        popupDiv.innerHTML = `${item.title}`;
         
-
         let popup = new Mapbox.Popup({ closeButton: false })
           .setDOMContent(popupDiv);
 
         let citymarker = new Mapbox.Marker()
-          .setLngLat(value.coordinates)
+          .setLngLat([item.longitude, item.latitude])
           .setPopup(popup)
           citymarker.addTo(map);
           citymarker.getElement().classList.add('city-markers')
+          citymarker.getElement().style.visibility = 'hidden';
       });
+    }
+  }, [attractions])
+
+  const showHideAttractions = () => {
+    let zoomLevel = map.getZoom();
+    let cityMarkers = document.querySelectorAll('.city-markers');
+
+    if(zoomLevel < 7) {
+      for (const marker of cityMarkers) {
+        marker.style.visibility = 'hidden';
+      };
+    } else {
+      for (const marker of cityMarkers) {
+        marker.style.visibility = 'visible';
+      };
+    }
   };
 
   function setVisualWeather(item) {
@@ -199,7 +165,7 @@ function HomeContainer() {
     console.log(date);
     
 
-    fetch(`https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${item.metadata.coordinates[0]}&lon=${item.metadata.coordinates[1]}&units=metric&dt=${date}&appid=aabfc74bd8d38f4cc57234aafe936811`)
+    fetch(`https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${item.metadata.longitude}&lon=${item.metadata.latitude}&units=metric&dt=${date}&appid=aabfc74bd8d38f4cc57234aafe936811`)
     .then(response => response.json())
     .then(data => {
       setWeather(data);
@@ -236,8 +202,8 @@ function HomeContainer() {
         <PageTitle>ROADTRIP PORTUGAL</PageTitle>
       </nav>
       <GridContainer>
-        <div style={{height: '600px'}} ref={mapElement} />
-        <DestinationInfoBox destinationInfo={destinationInfo} />
+        <div style={{height: '550px'}} ref={mapElement} />
+        <DestinationInfoBox destinationInfo={destinationInfo} attractions={attractions} />
         
         <ForecastBtn function={toggleWeather} text={'Show forecast'} weather={weather} />
         {

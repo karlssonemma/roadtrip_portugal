@@ -9,7 +9,7 @@ justify-content: center;
 
 @media (min-width: 900px) {
   grid-template-columns: 60% 30% max-content;
-  grid-template-rows: 600px;
+  grid-template-rows: 550px;
 }
 
 `; 

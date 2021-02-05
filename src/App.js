@@ -38,11 +38,6 @@ function App() {
     <>
       <GlobalStyle />
       <HomeContainer />
-      {/* <Router>
-        <Switch>
-          <Route path='/' component={HomeContainer} />
-        </Switch>
-      </Router> */}
     </>
   )
 };
