@@ -74,10 +74,10 @@ function HomeContainer() {
         container: mapElement.current,
         style: 'mapbox://styles/mapbox/light-v10',
         center: [ -8.446591991458519, 39.6649438481684 ],
-        zoom: 5.5
+        zoom: 5.5,
+        minZoom: 5.5
     })
     .addControl(new Mapbox.NavigationControl(), 'top-left')
-    
     .on('zoom', showHideAttractions);
 
   }, []);
@@ -107,16 +107,18 @@ function HomeContainer() {
 
           if (item.metadata.attractions !== null) {
             
-            let attractionsArray = Object.entries(item.metadata.attractions);
+            // let attractionsArray = Object.entries(item.metadata.attractions);
 
-              attractionsArray.forEach(([key, value]) => {
-                if (value.title !== "")
-                  newArray.push(value);             
-              });
-
+            //   attractionsArray.forEach(([key, value]) => {
+            //     if (value.title !== "")
+            //       newArray.push(value);             
+            //   });
+            item.metadata.attractions.forEach(attraction => {
+              newArray.push(attraction)
+            })
           };
         });
-      setAttractions(newArray);
+        setAttractions(newArray);    
     }
   }, [destinationData]);
 
@@ -126,10 +128,14 @@ function HomeContainer() {
       attractions.map(item => {
         let popupDiv = document.createElement('div');
         popupDiv.style.width = 'max-content';
-        popupDiv.style.height = '20px';
+        popupDiv.style.height = 'max-content';
         popupDiv.style.borderRadius = '5px';
         popupDiv.style.fontFamily = 'Jost, sans-serif';
-        popupDiv.innerHTML = `${item.title}`;
+        popupDiv.innerHTML =`
+        <p><b>${item.name}</b><p>
+        <p>${item.phone}</p>
+        <p>${item.address}</p>
+        `;
         
         let popup = new Mapbox.Popup({ closeButton: false })
           .setDOMContent(popupDiv);

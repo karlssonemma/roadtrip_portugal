@@ -48,9 +48,8 @@ function DestinationInfoBox(props) {
     let attractionArray = [];
 
     if (props.destinationInfo.metadata.attractions) {
-      let newAttractionArray = Object.entries(props.destinationInfo.metadata.attractions);
-        newAttractionArray.forEach(([key, value]) => {
-          attractionArray.push(value);
+      props.destinationInfo.metadata.attractions.forEach(attraction => {
+        attractionArray.push(attraction);
       });
     };
 
@@ -66,7 +65,7 @@ function DestinationInfoBox(props) {
             attractionArray && attractionArray.map(item => 
               <section>
                 <AttractionName>
-                  <ArrowIcon src={Arrow} alt='' />{item.title}
+                  <ArrowIcon src={Arrow} alt='' />{item.name}
                 </AttractionName>{item.text}
               </section>
             )

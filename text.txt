@@ -57,3 +57,10 @@ Porto
 
 -- Parque Natural das Serras de Aire e Candeeiros
 -8.771560909571715, 39.47956082930004
+
+
+Faro
+
+Faro is the best-known city in Portugal’s deservedly famous Algarve region. There’s an archaeological museum and a “Bishops’ Palace,” a Renaissance cathedral that was heavily bombed during World War II, but later rebuilt. Nearby in Estoi are Roman ruins, and Albufeira, also nearby, is a formerly quaint fishing village influenced by the Moors in the 8th century. It’s situated in a cliffside location, and has become famous for its beaches (there are 20) and nightlife.
+-7,932386106834156
+37,032524129849364
