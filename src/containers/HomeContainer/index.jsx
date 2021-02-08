@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import Cosmic from 'cosmicjs';
 import Mapbox from 'mapbox-gl';
 import styled from 'styled-components';
-// import { el } from '../../components/Marker';
 
 import PageTitle from '../../components/PageTitle';
 import DestinationInfoBox from '../../components/DestinationInfoBox';
@@ -17,7 +16,6 @@ import WelcomeScreen from '../../components/WelcomeScreen';
 let map = null;
 let nav = null;
 let newArray = [];
-// let markerArray = [];
 
 
 function HomeContainer() {
@@ -25,12 +23,13 @@ function HomeContainer() {
   const [pageData, setPageData] = useState(null);
   const [destinationData, setDestinationData] = useState(null);
   const [destinationInfo, setDestinationInfo] = useState(null);
-  const mapElement = useRef(null);
   const [weather, setWeather] = useState(null);
   const [weatherOpen, setWeatherOpen] = useState(false);
-  // const [allMarkers, setAllMarkers] = useState(null);
   const [attractions, setAttractions] = useState(null);
-  
+  const mapElement = useRef(null);
+
+  Mapbox.accessToken = process.env.MAPBOX_API_KEY;
+
   // COSMIC
   useEffect(() => {
     const client = new Cosmic();
@@ -65,8 +64,6 @@ function HomeContainer() {
 
   }, []);
 
-  Mapbox.accessToken = process.env.MAPBOX_API_KEY;
-
   // MAP
   useEffect(() => {
 
@@ -86,16 +83,16 @@ function HomeContainer() {
   useEffect(() => {
 
     if(destinationData !== null) {
-      console.log(destinationData)
 
       destinationData.map(item => {       
 
-          let marker = new Mapbox.Marker({ color: 'black' })
+          let marker = new Mapbox.Marker({ color: '#549155' })
           .setLngLat([item.metadata.longitude, item.metadata.latitude])
           marker.addTo(map)
+
           marker.getElement().addEventListener('click', () => {
             setDestinationInfo(item);  
-            setVisualWeather(item);
+            fetchWeather(item);
 
             map.flyTo({
               center: [item.metadata.longitude, item.metadata.latitude],
@@ -104,6 +101,16 @@ function HomeContainer() {
               curve: 1
             });
           });
+
+          // marker.getElement().addEventListener('mouseover', (e) => {
+          //   let corArray = []
+          //   let newArray = Object.entries(marker._lngLat);
+          //   newArray.forEach(([key, value]) => {
+          //     corArray.push(value);
+          //   });
+          //   const found = destinationData.find(item => item.metadata.longitude === e.target._lngLat.xc.lng || item.metadata.latitude === e.target._lngLat.xc.lat)
+          //   console.log(found);
+          // });
 
           if (item.metadata.attractions !== null) {
             
@@ -165,23 +172,19 @@ function HomeContainer() {
     }
   };
 
-  function setVisualWeather(item) {
+  function fetchWeather(item) {
 
-    let date = Math.floor(new Date().getTime() / 1000);
-    console.log(date);
-    
+    let date = Math.floor(new Date().getTime() / 1000);    
 
     fetch(`https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${item.metadata.longitude}&lon=${item.metadata.latitude}&units=metric&dt=${date}&appid=aabfc74bd8d38f4cc57234aafe936811`)
     .then(response => response.json())
     .then(data => {
       setWeather(data);
-      console.log(data);
     })
     .catch(error => {
       console.log(error);
     });
 
-    console.log(item);
   };
 
   function renderWeather() {
@@ -205,7 +208,7 @@ function HomeContainer() {
     <>
       <WelcomeScreen />
       <nav>
-        <PageTitle>ROADTRIP PORTUGAL</PageTitle>
+        <PageTitle>VISIT PORTUGAL</PageTitle>
       </nav>
       <GridContainer>
         <div style={{height: '550px'}} ref={mapElement} />

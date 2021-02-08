@@ -6,7 +6,7 @@ import TapIcon from './img/tap.png';
 import Arrow from './img/right-arrow.png';
 
 const Section = styled.section`
-    padding: 1em;
+    padding: 1.4em;
     background-color: gray;
     overflow: scroll;
 `;
@@ -14,7 +14,6 @@ const Section = styled.section`
 const Icon = styled.img`
   width: 30px;
   margin-right: .5em;
-  /* transform: translateY(3px); */
 `;
 
 const ArrowIcon = styled.img`
@@ -31,6 +30,12 @@ const PreDiv = styled.div`
   align-items: center;
 `;
 
+const AttractionList = styled.ul`
+  margin: 0;
+  padding: 0;
+  list-style: none;
+`;
+
 const AttractionsHead = styled.h3`
   margin: .2em 0;
   text-decoration: underline;
@@ -40,37 +45,48 @@ const AttractionName = styled.h4`
   font-weight: 600;
   margin: 0;
 `;
+const AttractionText = styled.p`
+  margin: 0;
+`;
 
-function DestinationInfoBox(props) {
+const Image = styled.img`
+  width: 100%;
+`;
+
+function DestinationInfoBox({ destinationInfo }) {
 
   function renderInfo() {
 
     let attractionArray = [];
 
-    if (props.destinationInfo.metadata.attractions) {
-      props.destinationInfo.metadata.attractions.forEach(attraction => {
+    if (destinationInfo.metadata.attractions) {
+      destinationInfo.metadata.attractions.forEach(attraction => {
         attractionArray.push(attraction);
       });
     };
 
     return(
       <>
-        <SecondaryTitle key={Math.floor(Math.random() * 1000)} dangerouslySetInnerHTML={{__html: props.destinationInfo.title}} />
-        <section key={Math.floor(Math.random() * 1000)} dangerouslySetInnerHTML={{__html: props.destinationInfo.content}} />
-        <section>
+        <SecondaryTitle key={Math.floor(Math.random() * 1000)} dangerouslySetInnerHTML={{__html: destinationInfo.title}} />
           {
-            props.destinationInfo && <AttractionsHead>{props.destinationInfo.metadata.attractions_header}</AttractionsHead>
+            (destinationInfo.metadata.location_image && destinationInfo.metadata.location_image.url !== null) && <Image src={destinationInfo.metadata.location_image.url} />
           }
+        <section key={Math.floor(Math.random() * 1000)} dangerouslySetInnerHTML={{__html: destinationInfo.content}} />
+          {
+            destinationInfo && <AttractionsHead>{destinationInfo.metadata.attractions_header}</AttractionsHead>
+          }
+        <AttractionList>
           {
             attractionArray && attractionArray.map(item => 
-              <section>
+              <li key={Math.floor(Math.random() * 1000)}>
                 <AttractionName>
                   <ArrowIcon src={Arrow} alt='' />{item.name}
-                </AttractionName>{item.text}
-              </section>
+                </AttractionName>
+                <AttractionText>{item.text}</AttractionText>
+              </li>
             )
           }
-        </section>
+        </AttractionList>
       </>
     )
   };
@@ -79,7 +95,7 @@ function DestinationInfoBox(props) {
     <>
       <Section>
         {
-          props.destinationInfo ? renderInfo() : <PreDiv><Icon src={TapIcon} alt='' /> to travel!</PreDiv>
+          destinationInfo ? renderInfo() : <PreDiv><Icon src={TapIcon} alt='' /> to travel!</PreDiv>
         }
       </Section>
     </>
