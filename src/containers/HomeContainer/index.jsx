@@ -39,7 +39,7 @@ function HomeContainer() {
     });
 
     bucket.getObject({
-      slug: 'home',
+      slug: 'visit-portugal',
       props: 'slug,title,content'
     })
     .then(data => {
@@ -86,45 +86,33 @@ function HomeContainer() {
 
       destinationData.map(item => {       
 
-          let marker = new Mapbox.Marker({ color: '#549155' })
+          let marker = new Mapbox.Marker({ 
+            color: '#549155', 
+            tabIndex: '0' 
+          })
           .setLngLat([item.metadata.longitude, item.metadata.latitude])
           marker.addTo(map)
+          marker.getElement().tabIndex = 0; 
 
           marker.getElement().addEventListener('click', () => {
-            setDestinationInfo(item);  
+            setDestinationInfo(item);
             fetchWeather(item);
 
             map.flyTo({
               center: [item.metadata.longitude, item.metadata.latitude],
               zoom: 12.5,
-              speed: 0.7,
+              speed: 1.2,
               curve: 1
             });
           });
 
-          // marker.getElement().addEventListener('mouseover', (e) => {
-          //   let corArray = []
-          //   let newArray = Object.entries(marker._lngLat);
-          //   newArray.forEach(([key, value]) => {
-          //     corArray.push(value);
-          //   });
-          //   const found = destinationData.find(item => item.metadata.longitude === e.target._lngLat.xc.lng || item.metadata.latitude === e.target._lngLat.xc.lat)
-          //   console.log(found);
-          // });
-
           if (item.metadata.attractions !== null) {
-            
-            // let attractionsArray = Object.entries(item.metadata.attractions);
-
-            //   attractionsArray.forEach(([key, value]) => {
-            //     if (value.title !== "")
-            //       newArray.push(value);             
-            //   });
             item.metadata.attractions.forEach(attraction => {
               newArray.push(attraction)
             })
           };
         });
+
         setAttractions(newArray);    
     }
   }, [destinationData]);
@@ -153,6 +141,7 @@ function HomeContainer() {
           citymarker.addTo(map);
           citymarker.getElement().classList.add('city-markers')
           citymarker.getElement().style.visibility = 'hidden';
+          citymarker.getElement().tabIndex = 0; 
       });
     }
   }, [attractions])
@@ -191,9 +180,7 @@ function HomeContainer() {
     return(
       <Overlay>
         <Button function={toggleWeather} text={'X'} />
-        <div>
-          <Weather weather={weather} />
-        </div>
+        <Weather weather={weather} />
       </Overlay>
     )
   };
@@ -201,14 +188,24 @@ function HomeContainer() {
   function toggleWeather() {
       setWeatherOpen(!weatherOpen);
   };
-
+  
+  function zoomOut() {
+    map.flyTo({
+      center: [ -8.446591991458519, 39.6649438481684 ],
+      zoom: 5.5,
+      speed: 1.2,
+      curve: 1
+    });
+  };
 
 
   return (
     <>
-      <WelcomeScreen />
+      <WelcomeScreen pageData={pageData} />
       <nav>
-        <PageTitle>VISIT PORTUGAL</PageTitle>
+        {
+          pageData && <PageTitle dangerouslySetInnerHTML={{__html: pageData.title}} />
+        }
       </nav>
       <GridContainer>
         <div style={{height: '550px'}} ref={mapElement} />

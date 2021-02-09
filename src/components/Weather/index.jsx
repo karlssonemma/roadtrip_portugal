@@ -3,9 +3,11 @@ import styled from 'styled-components';
 import Plot from 'react-plotly.js';
 
 const Div = styled.div`
-    max-width: 600px;
-    width: 80vw;
-    height: 90vh;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `;
 
 
@@ -91,7 +93,7 @@ function Weather(props) {
         <Div>
             {
                 props.weather && <Plot
-                style={{width: 'auto', height: '300px'}}
+                style={{width: '60vw', height: '70vh'}}
                 data={graph.data}
                 layout={graph.layout}
                 frames={graph.frames}

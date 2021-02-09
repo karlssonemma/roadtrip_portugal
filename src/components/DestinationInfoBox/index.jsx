@@ -69,7 +69,7 @@ function DestinationInfoBox({ destinationInfo }) {
       <>
         <SecondaryTitle key={Math.floor(Math.random() * 1000)} dangerouslySetInnerHTML={{__html: destinationInfo.title}} />
           {
-            (destinationInfo.metadata.location_image && destinationInfo.metadata.location_image.url !== null) && <Image src={destinationInfo.metadata.location_image.url} />
+            (destinationInfo.metadata.location_image && destinationInfo.metadata.location_image.url !== null) && <Image src={destinationInfo.metadata.location_image.url} alt={'Photo of ' + destinationInfo.title} />
           }
         <section key={Math.floor(Math.random() * 1000)} dangerouslySetInnerHTML={{__html: destinationInfo.content}} />
           {
@@ -93,7 +93,7 @@ function DestinationInfoBox({ destinationInfo }) {
 
   return (
     <>
-      <Section>
+      <Section tabIndex='0'>
         {
           destinationInfo ? renderInfo() : <PreDiv><Icon src={TapIcon} alt='' /> to travel!</PreDiv>
         }

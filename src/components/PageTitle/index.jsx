@@ -6,6 +6,7 @@ const PageTitle = styled.h1`
     margin: .5em auto;
     font-family: 'Jost', sans-serif;
     font-size: 1.5rem;
+    text-transform: uppercase;
 
         @media screen and (min-width: 500px) {
             font-size: 2.5rem;

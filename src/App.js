@@ -21,7 +21,7 @@ function App() {
     });
 
     bucket.getObject({
-      slug: 'home',
+      slug: 'visit-portugal',
       props: 'slug,title,content'
     })
     .then(data => {
