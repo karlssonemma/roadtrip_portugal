@@ -11,7 +11,7 @@ const Div = styled.div`
 `;
 
 
-function Weather(props) {
+function WeatherGraph({ weather }) {
 
     const [graph, setGraph] = useState({
         data: [
@@ -41,6 +41,7 @@ function Weather(props) {
             margin: {
                 autoexpand: true,
             },
+            autosize: true,
             xaxis: {
                 showgrid: false,
                 autorange: true
@@ -51,7 +52,7 @@ function Weather(props) {
     });
 
     useEffect(() => {
-        if(props.weather !== null) {
+        if(weather !== null) {
 
             let newGraphData = {
                 x: [],
@@ -72,7 +73,7 @@ function Weather(props) {
                 fillcolor: 'rgba(51, 102, 204, 0.5)'
             };
 
-            props.weather.hourly.map(item => {
+            weather.hourly.map(item => {
                 let time = new Date(item.dt * 1000);
                 let newTime = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -87,13 +88,13 @@ function Weather(props) {
 
             setGraph(newChartState);
         };
-    }, [props.weather])
+    }, [weather])
 
     return(
         <Div>
             {
-                props.weather && <Plot
-                style={{width: '60vw', height: '70vh'}}
+                weather && <Plot
+                style={{width: '80vw', height: '70vh'}}
                 data={graph.data}
                 layout={graph.layout}
                 frames={graph.frames}
@@ -106,4 +107,4 @@ function Weather(props) {
     )
 }
 
-export default Weather;
+export default WeatherGraph;

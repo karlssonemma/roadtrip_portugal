@@ -1,22 +1,9 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
-const Btn = styled.button`
-  width: 100%;
-  height: 100%;
-  border: none;
-  cursor: pointer;
-  background-color: lightgray;
-  font-family: 'Jost', sans-serif;
-
-  &:hover {
-      background-color: darkgray;
-  }
-`;
+import { StyledBtn } from '../../components/StyledBtn'
 
 const Text = styled.span`
-  text-transform: uppercase;
-  font-size: 1.5rem;
   padding: .5em;
   display: block;
   
@@ -26,14 +13,14 @@ const Text = styled.span`
     };
 `;
 
-function ForecastBtn(props) {
+function ForecastBtn({ btnState, btnText, btnFunction }) {
 
     return(
         <>
         {
-          props.weather 
-          ? <Btn onClick={() => props.function()}><Text>{props.text}</Text></Btn> 
-          : <Btn onClick={() => props.function()} disabled><Text>{props.text}</Text></Btn> 
+          btnState
+          ? <StyledBtn onClick={() => btnFunction()}><Text>{btnText}</Text></StyledBtn> 
+          : <StyledBtn onClick={() => btnFunction()} disabled><Text>{btnText}</Text></StyledBtn> 
         }
         </>
     )

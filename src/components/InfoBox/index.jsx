@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import Cosmic from 'cosmicjs';
 import styled from 'styled-components';
 import SecondaryTitle from '../SecondaryTitle';
-import TapIcon from './img/tap.png';
+import Tap from './img/tap.png';
 import Arrow from './img/right-arrow.png';
 
 const Section = styled.section`
@@ -11,7 +11,7 @@ const Section = styled.section`
     overflow: scroll;
 `;
 
-const Icon = styled.img`
+const TapIcon = styled.img`
   width: 30px;
   margin-right: .5em;
 `;
@@ -22,23 +22,24 @@ const ArrowIcon = styled.img`
   margin-right: .5em;
 `;
 
-const PreDiv = styled.div`
+const TapToTravel = styled.p`
   width: 100%;
   height: 100%;
+  margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const AttractionsHead = styled.h3`
+  margin: .2em 0;
+  text-decoration: underline;
 `;
 
 const AttractionList = styled.ul`
   margin: 0;
   padding: 0;
   list-style: none;
-`;
-
-const AttractionsHead = styled.h3`
-  margin: .2em 0;
-  text-decoration: underline;
 `;
 
 const AttractionName = styled.h4`
@@ -53,7 +54,7 @@ const Image = styled.img`
   width: 100%;
 `;
 
-function DestinationInfoBox({ destinationInfo }) {
+function InfoBox({ destinationInfo }) {
 
   function renderInfo() {
 
@@ -69,7 +70,8 @@ function DestinationInfoBox({ destinationInfo }) {
       <>
         <SecondaryTitle key={Math.floor(Math.random() * 1000)} dangerouslySetInnerHTML={{__html: destinationInfo.title}} />
           {
-            (destinationInfo.metadata.location_image && destinationInfo.metadata.location_image.url !== null) && <Image src={destinationInfo.metadata.location_image.url} alt={'Photo of ' + destinationInfo.title} />
+            (destinationInfo.metadata.location_image && destinationInfo.metadata.location_image.url !== null) 
+              && <Image src={destinationInfo.metadata.location_image.url} alt={'Photo of ' + destinationInfo.title} />
           }
         <section key={Math.floor(Math.random() * 1000)} dangerouslySetInnerHTML={{__html: destinationInfo.content}} />
           {
@@ -95,11 +97,11 @@ function DestinationInfoBox({ destinationInfo }) {
     <>
       <Section tabIndex='0'>
         {
-          destinationInfo ? renderInfo() : <PreDiv><Icon src={TapIcon} alt='' /> to travel!</PreDiv>
+          destinationInfo ? renderInfo() : <TapToTravel><TapIcon src={Tap} alt='' /> to travel!</TapToTravel>
         }
       </Section>
     </>
   )
 };
 
-export default DestinationInfoBox;
+export default InfoBox;

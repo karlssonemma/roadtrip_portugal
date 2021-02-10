@@ -4,17 +4,18 @@ import Mapbox from 'mapbox-gl';
 import styled from 'styled-components';
 
 import PageTitle from '../../components/PageTitle';
-import DestinationInfoBox from '../../components/DestinationInfoBox';
-import Weather from '../../components/Weather';
-import Button from '../../components/Button';
+import InfoBox from '../../components/InfoBox';
+import WeatherGraph from '../../components/WeatherGraph';
+import Btn from '../../components/Btn';
 import ForecastBtn from '../../components/ForecastBtn';
 import { Overlay } from '../../components/Overlay';
 import { GridContainer } from '../../components/GridContainer'
+import { StyledBtn } from '../../components/StyledBtn';
 import WelcomeScreen from '../../components/WelcomeScreen';
 
  
 let map = null;
-let nav = null;
+// let nav = null;
 let newArray = [];
 
 
@@ -44,7 +45,6 @@ function HomeContainer() {
     })
     .then(data => {
       setPageData(data.object);
-      console.log(data);
     })
     .catch(error => {
       console.log(error)
@@ -56,7 +56,6 @@ function HomeContainer() {
     })
     .then(data => {
       setDestinationData(data.objects);
-      console.log(data.objects);
     })
     .catch(error => {
       console.log(error)
@@ -115,11 +114,14 @@ function HomeContainer() {
 
         setAttractions(newArray);    
     }
+
   }, [destinationData]);
 
   // SMALL MARKERS
   useEffect(() => {
+
     if (attractions !== null) {
+
       attractions.map(item => {
         let popupDiv = document.createElement('div');
         popupDiv.style.width = 'max-content';
@@ -139,23 +141,25 @@ function HomeContainer() {
           .setLngLat([item.longitude, item.latitude])
           .setPopup(popup)
           citymarker.addTo(map);
-          citymarker.getElement().classList.add('city-markers')
+          citymarker.getElement().classList.add('attractions')
           citymarker.getElement().style.visibility = 'hidden';
           citymarker.getElement().tabIndex = 0; 
       });
+
     }
+
   }, [attractions])
 
   const showHideAttractions = () => {
     let zoomLevel = map.getZoom();
-    let cityMarkers = document.querySelectorAll('.city-markers');
+    let attractionMarkers = document.querySelectorAll('.attractions');
 
     if(zoomLevel < 7) {
-      for (const marker of cityMarkers) {
+      for (const marker of attractionMarkers) {
         marker.style.visibility = 'hidden';
       };
     } else {
-      for (const marker of cityMarkers) {
+      for (const marker of attractionMarkers) {
         marker.style.visibility = 'visible';
       };
     }
@@ -165,7 +169,7 @@ function HomeContainer() {
 
     let date = Math.floor(new Date().getTime() / 1000);    
 
-    fetch(`https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${item.metadata.longitude}&lon=${item.metadata.latitude}&units=metric&dt=${date}&appid=aabfc74bd8d38f4cc57234aafe936811`)
+    fetch(`https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${item.metadata.longitude}&lon=${item.metadata.latitude}&units=metric&dt=${date}&appid=${process.env.WEATHER_KEY}`)
     .then(response => response.json())
     .then(data => {
       setWeather(data);
@@ -179,8 +183,8 @@ function HomeContainer() {
   function renderWeather() {
     return(
       <Overlay>
-        <Button function={toggleWeather} text={'X'} />
-        <Weather weather={weather} />
+        <Btn function={toggleWeather} text={'X'} />
+        <WeatherGraph weather={weather} />
       </Overlay>
     )
   };
@@ -208,10 +212,13 @@ function HomeContainer() {
         }
       </nav>
       <GridContainer>
-        <div style={{height: '550px'}} ref={mapElement} />
-        <DestinationInfoBox destinationInfo={destinationInfo} attractions={attractions} />
+        <div>
+          <div style={{height: '90%', width: 'auto'}} ref={mapElement} />
+          <StyledBtn style={{height: '10%'}} onClick={() => zoomOut()}>zoom out</StyledBtn>
+        </div>
+        <InfoBox destinationInfo={destinationInfo} attractions={attractions} />
         
-        <ForecastBtn function={toggleWeather} text={'Show forecast'} weather={weather} />
+        <ForecastBtn btnFunction={toggleWeather} btnText={'Show forecast'} btnState={weather} />
         {
           weatherOpen && renderWeather()
         }

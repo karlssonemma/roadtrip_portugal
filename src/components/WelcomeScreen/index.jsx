@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-
 const Section = styled.section`
     width: 100vw;
     height: 100vh;
@@ -26,14 +25,19 @@ const Section = styled.section`
 `;
 
 const Intro = styled.p`
-    width: 40%;
+    width: 60%;
     color: gray;
 
     text-align: center;
     font-family: 'Jost', sans-serif;
-    font-size: 1.6rem;
+    font-size: 1.2rem;
 
     animation: Header 1.5s ease-in forwards;
+
+    @media screen and (min-width: 800px) {
+        width: 40%;
+        font-size: 1.6rem;
+    }
 
     @keyframes Header {
         0% {
@@ -49,7 +53,7 @@ const Intro = styled.p`
 
 const AnimatedText = styled.p`
     width: 0;
-    color: darkgray;
+    color: white;
     border-right: 1px solid transparent;
     overflow: hidden;
     white-space: nowrap;
@@ -73,8 +77,18 @@ const AnimatedText = styled.p`
 
 
 function WelcomeScreen({ pageData }) {
+
+    setTimeout(() => {
+        hideWelcomeScreen()
+    }, 9000);
+
+    function hideWelcomeScreen() {
+        let screen = document.querySelector('.welcome-screen')
+        screen.style.display = 'none';
+    };
+
     return(
-        <Section onClick={(e) => e.target.style.display = 'none'}>
+        <Section className='welcome-screen' onClick={() => hideWelcomeScreen()}>
             {
               pageData && <Intro dangerouslySetInnerHTML={{__html: pageData.content}} />
             }

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const PageTitle = styled.h1`
     width: max-content;
-    margin: .5em auto;
+    margin: .3em auto;
     font-family: 'Jost', sans-serif;
     font-size: 1.5rem;
     text-transform: uppercase;
