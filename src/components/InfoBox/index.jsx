@@ -54,7 +54,11 @@ const Image = styled.img`
   width: 100%;
 `;
 
+
+
 function InfoBox({ destinationInfo }) {
+
+  console.log(destinationInfo)
 
   function renderInfo() {
 
@@ -68,19 +72,19 @@ function InfoBox({ destinationInfo }) {
 
     return(
       <>
-        <SecondaryTitle key={Math.floor(Math.random() * 1000)} dangerouslySetInnerHTML={{__html: destinationInfo.title}} />
+        <SecondaryTitle dangerouslySetInnerHTML={{__html: destinationInfo.title}} />
           {
             (destinationInfo.metadata.location_image && destinationInfo.metadata.location_image.url !== null) 
               && <Image src={destinationInfo.metadata.location_image.url} alt={'Photo of ' + destinationInfo.title} />
           }
-        <section key={Math.floor(Math.random() * 1000)} dangerouslySetInnerHTML={{__html: destinationInfo.content}} />
+        <section dangerouslySetInnerHTML={{__html: destinationInfo.content}} />
           {
             destinationInfo && <AttractionsHead>{destinationInfo.metadata.attractions_header}</AttractionsHead>
           }
         <AttractionList>
           {
             attractionArray && attractionArray.map(item => 
-              <li key={Math.floor(Math.random() * 1000)}>
+              <li key={item.name}>
                 <AttractionName>
                   <ArrowIcon src={Arrow} alt='' />{item.name}
                 </AttractionName>

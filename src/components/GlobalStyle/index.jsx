@@ -13,7 +13,7 @@ const GlobalStyle = createGlobalStyle`
     body {
         height: 100vh;
         font-family: 'Bodoni Moda', serif;
-        font-size: 14px;
+        font-size: 16px;
         color: black;
         background-color: white;
         letter-spacing: 1.5;

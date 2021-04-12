@@ -74,7 +74,8 @@ function HomeContainer() {
         minZoom: 5.5
     })
     .addControl(new Mapbox.NavigationControl(), 'top-left')
-    .on('zoom', showHideAttractions);
+    .on('zoom', showHideAttractions)
+    map.keyboard.enable();
 
   }, []);
 
@@ -87,7 +88,8 @@ function HomeContainer() {
 
           let marker = new Mapbox.Marker({ 
             color: '#549155', 
-            tabIndex: '0' 
+            tabIndex: '0',
+            ariaLabel: item
           })
           .setLngLat([item.metadata.longitude, item.metadata.latitude])
           marker.addTo(map)
@@ -104,6 +106,21 @@ function HomeContainer() {
               curve: 1
             });
           });
+
+          marker.getElement().addEventListener('keydown', (e) => {
+    
+              if (e.code === 'Space') {
+                setDestinationInfo(item);
+                fetchWeather(item);
+
+                map.flyTo({
+                  center: [item.metadata.longitude, item.metadata.latitude],
+                  zoom: 12.5,
+                  speed: 1.2,
+                  curve: 1
+                });
+              }
+          })
 
           if (item.metadata.attractions !== null) {
             item.metadata.attractions.forEach(attraction => {
@@ -182,7 +199,7 @@ function HomeContainer() {
 
   function renderWeather() {
     return(
-      <Overlay>
+      <Overlay onClick={toggleWeather}>
         <Btn function={toggleWeather} text={'X'} />
         <WeatherGraph weather={weather} />
       </Overlay>
