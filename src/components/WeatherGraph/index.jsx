@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Plot from 'react-plotly.js';
 
-const Div = styled.div`
+const Container = styled.div`
     width: 100%;
     height: 100%;
     display: flex;
@@ -91,7 +91,7 @@ function WeatherGraph({ weather }) {
     }, [weather])
 
     return(
-        <Div>
+        <Container>
             {
                 weather && <Plot
                 style={{width: '80vw', height: '70vh'}}
@@ -103,7 +103,7 @@ function WeatherGraph({ weather }) {
                 onUpdate={(figure) => setGraph(figure)}
             />
             }
-        </Div>
+        </Container>
     )
 }
 

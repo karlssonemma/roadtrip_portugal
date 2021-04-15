@@ -58,8 +58,7 @@ const Image = styled.img`
 
 function InfoBox({ destinationInfo }) {
 
-  console.log(destinationInfo)
-
+ 
   function renderInfo() {
 
     let attractionArray = [];

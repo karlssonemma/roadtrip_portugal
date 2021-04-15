@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import CloseIcon from './img/cancel.png';
 
-const Button = styled.button`
+const IconButton = styled.button`
     border: none;
     margin: 1em;
     cursor: pointer;
@@ -17,10 +17,10 @@ const Button = styled.button`
     };
 `;
 
-function Btn(props) {
+function IconBtn({ btnFunction }) {
     return(
-        <Button onClick={() => props.function()}><img src={CloseIcon} /></Button>
+        <IconButton onClick={() => btnFunction()}><img src={CloseIcon} /></IconButton>
     )
 }
 
-export default Btn;
+export default IconBtn;

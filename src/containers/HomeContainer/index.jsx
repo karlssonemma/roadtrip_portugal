@@ -6,17 +6,17 @@ import styled from 'styled-components';
 import PageTitle from '../../components/PageTitle';
 import InfoBox from '../../components/InfoBox';
 import WeatherGraph from '../../components/WeatherGraph';
-import Btn from '../../components/Btn';
+import IconBtn from '../../components/IconBtn';
 import ForecastBtn from '../../components/ForecastBtn';
 import { Overlay } from '../../components/Overlay';
 import { GridContainer } from '../../components/GridContainer'
 import { StyledBtn } from '../../components/StyledBtn';
 import WelcomeScreen from '../../components/WelcomeScreen';
+import { FetchWeather } from '../../../utils/apiHelpers';
 
  
 let map = null;
-// let nav = null;
-let newArray = [];
+// let newArray = [];
 
 
 function HomeContainer() {
@@ -83,9 +83,11 @@ function HomeContainer() {
   useEffect(() => {
 
     if(destinationData !== null) {
+      
+      let attractionsArray = [];
 
-      destinationData.map(item => {       
-
+      destinationData.map(item => {     
+        
           let marker = new Mapbox.Marker({ 
             color: '#549155', 
             tabIndex: '0',
@@ -94,42 +96,19 @@ function HomeContainer() {
           .setLngLat([item.metadata.longitude, item.metadata.latitude])
           marker.addTo(map)
           marker.getElement().tabIndex = 0; 
-
-          marker.getElement().addEventListener('click', () => {
-            setDestinationInfo(item);
-            fetchWeather(item);
-
-            map.flyTo({
-              center: [item.metadata.longitude, item.metadata.latitude],
-              zoom: 12.5,
-              speed: 1.2,
-              curve: 1
-            });
-          });
-
-          marker.getElement().addEventListener('keydown', (e) => {
-    
-              if (e.code === 'Space') {
-                setDestinationInfo(item);
-                fetchWeather(item);
-
-                map.flyTo({
-                  center: [item.metadata.longitude, item.metadata.latitude],
-                  zoom: 12.5,
-                  speed: 1.2,
-                  curve: 1
-                });
-              }
-          })
+          marker.getElement().ariaLabel = 'marker';
+          
+          marker.getElement().addEventListener('click', (e) => handleClickMarker(item, e))
+          marker.getElement().addEventListener('keydown', (e) => handleClickMarker(item, e))
 
           if (item.metadata.attractions !== null) {
             item.metadata.attractions.forEach(attraction => {
-              newArray.push(attraction)
+              attractionsArray.push(attraction)
             })
           };
         });
 
-        setAttractions(newArray);    
+        setAttractions(attractionsArray);    
     }
 
   }, [destinationData]);
@@ -167,11 +146,26 @@ function HomeContainer() {
 
   }, [attractions])
 
+  const handleClickMarker = (item, e) => {
+
+    if(e.type === 'keydown' && e.code === 'Space' || e.type === 'click') {
+      setDestinationInfo(item);
+      getWeather(item);
+
+      map.flyTo({
+        center: [item.metadata.longitude, item.metadata.latitude],
+        zoom: 12.5,
+        speed: 1.2,
+        curve: 1
+      });
+    }
+  };
+
   const showHideAttractions = () => {
     let zoomLevel = map.getZoom();
     let attractionMarkers = document.querySelectorAll('.attractions');
 
-    if(zoomLevel < 7) {
+    if(zoomLevel < 10) {
       for (const marker of attractionMarkers) {
         marker.style.visibility = 'hidden';
       };
@@ -182,28 +176,10 @@ function HomeContainer() {
     }
   };
 
-  function fetchWeather(item) {
-
+  async function getWeather(item) {
     let date = Math.floor(new Date().getTime() / 1000);    
-
-    fetch(`https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${item.metadata.longitude}&lon=${item.metadata.latitude}&units=metric&dt=${date}&appid=${process.env.WEATHER_KEY}`)
-    .then(response => response.json())
-    .then(data => {
-      setWeather(data);
-    })
-    .catch(error => {
-      console.log(error);
-    });
-
-  };
-
-  function renderWeather() {
-    return(
-      <Overlay onClick={toggleWeather}>
-        <Btn function={toggleWeather} text={'X'} />
-        <WeatherGraph weather={weather} />
-      </Overlay>
-    )
+    let weather = await FetchWeather(item, date)
+    setWeather(weather)
   };
 
   function toggleWeather() {
@@ -223,22 +199,27 @@ function HomeContainer() {
   return (
     <>
       <WelcomeScreen pageData={pageData} />
+      {
+        weatherOpen && 
+          <Overlay onClick={toggleWeather}>
+            <IconBtn btnFunction={toggleWeather} text={'X'} />
+            <WeatherGraph weather={weather} />
+          </Overlay>
+      }
       <nav>
         {
           pageData && <PageTitle dangerouslySetInnerHTML={{__html: pageData.title}} />
         }
       </nav>
       <GridContainer>
-        <div>
+        <div aria-label='map'>
           <div style={{height: '90%', width: 'auto'}} ref={mapElement} />
           <StyledBtn style={{height: '10%'}} onClick={() => zoomOut()}>zoom out</StyledBtn>
         </div>
+
         <InfoBox destinationInfo={destinationInfo} attractions={attractions} />
         
         <ForecastBtn btnFunction={toggleWeather} btnText={'Show forecast'} btnState={weather} />
-        {
-          weatherOpen && renderWeather()
-        }
       </GridContainer>
     </>
   )
