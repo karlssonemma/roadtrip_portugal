@@ -29,14 +29,14 @@ function HomeContainer() {
   const [attractions, setAttractions] = useState(null);
   const mapElement = useRef(null);
 
-  Mapbox.accessToken = process.env.MAPBOX_API_KEY;
+  Mapbox.accessToken = process.env.REACT_APP_MAPBOX_API_KEY;
 
   // COSMIC
   useEffect(() => {
     const client = new Cosmic();
     const bucket = client.bucket({
-      slug: process.env.BUCKET_SLUG,
-      read_key: process.env.READ_KEY
+      slug: process.env.REACT_APP_BUCKET_SLUG,
+      read_key: process.env.REACT_APP_READ_KEY
     });
 
     bucket.getObject({
